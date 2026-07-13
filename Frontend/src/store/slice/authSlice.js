@@ -24,9 +24,7 @@ const authSlice = createSlice({
 });
 
 export const {
-    loginStart,
-    loginSuccess,
-    loginFailure,
+    login,
     logout,
 } = authSlice.actions;
 

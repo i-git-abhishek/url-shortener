@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { loginUser } from "../api/user.api";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import {login} from "../store/slice/authSlice.js";
+ 
 const LoginForm = ({ setCurrentAction }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  // const auth = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  console.log(auth)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,8 +26,8 @@ const LoginForm = ({ setCurrentAction }) => {
     }
 
     try {
-        console.log("Logging in with:", email, password); // Debugging line
       const data = await loginUser(email.trim(), password);
+      dispatch(login(data.user));
       setSuccessMessage(data?.message || "Login successful.");
     } catch (err) {
       console.error("Login failed:", err);
