@@ -24,3 +24,18 @@ export const login_user = wrapAsync (async (req, res) => {
         message: "User logged in successfully",
     })
 })
+
+export const logout_user = wrapAsync (async (req, res) => {
+    res.clearCookie("accessToken", cookieOptions);
+    res.status(200).json({
+        message: "User logged out successfully",
+    })
+})  
+
+export const get_current_user = wrapAsync (async (req, res) => {
+    const user = req.user;
+    res.status(200).json({
+        user: user,
+        message: "Current user fetched successfully",
+    })
+})

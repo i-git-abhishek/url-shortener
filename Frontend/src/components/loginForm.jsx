@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginUser } from "../api/user.api";
 import { useSelector, useDispatch } from "react-redux";
 import {login} from "../store/slice/authSlice.js";
+import { useNavigate } from "@tanstack/react-router";
  
 const LoginForm = ({ setCurrentAction }) => {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ const LoginForm = ({ setCurrentAction }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   console.log(auth)
 
   const handleSubmit = async (e) => {
@@ -28,6 +30,7 @@ const LoginForm = ({ setCurrentAction }) => {
     try {
       const data = await loginUser(email.trim(), password);
       dispatch(login(data.user));
+      navigate({to: "/dashboard"})
       setSuccessMessage(data?.message || "Login successful.");
     } catch (err) {
       console.error("Login failed:", err);
