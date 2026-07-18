@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
-import { shortUrlRoute, urlRoute } from "./src/routes/shortUrl.route.js";
+import shortUrlRoute from "./src/routes/shortUrl.route.js";
+import urlRoute from "./src/routes/shortUrl.route.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from './src/routes/user.routes.js'
 import { redirectFromShortUrl } from "./src/controllers/shortUrl.controller.js";
