@@ -35,11 +35,20 @@ export const getLongUrl = async (id) => {
   }
 };
 
-export const getCustomShortUrl  = async (slug) => {
+export const getCustomShortUrl = async (slug) => {
   try {
     return await shortURLmodel.findOne({ short_url: slug });
   } catch (error) {
     console.error("Error fetching short URL by slug:", error.message);
     throw new Error("Failed to fetch short URL by slug");
   }
-}
+};
+
+export const getUrlsByUser = async (userId) => {
+  try {
+    return await shortURLmodel.find({ user: userId }).sort({ _id: -1 }).lean();
+  } catch (error) {
+    console.error("Error fetching user URLs:", error.message);
+    throw new Error("Failed to fetch user URLs");
+  }
+};

@@ -2,7 +2,7 @@ import {
   shortUrlServiceWithoutUser,
   shortUrlServiceWithUser,
 } from "../services/shortUrl.service.js";
-import { getLongUrl } from "../dao/shortUrl.js";
+import { getLongUrl, getUrlsByUser } from "../dao/shortUrl.js";
 import { wrapAsync } from "../utils/wrapAsync.js";
 
 export const createShortUrl = async (req, res, next) => {
@@ -20,8 +20,7 @@ export const createShortUrl = async (req, res, next) => {
       shortURL = await shortUrlServiceWithUser(url, user, slug);
     } else {
       shortURL = await shortUrlServiceWithoutUser(url);
-    } 
-    
+    }
 
     res.status(201).json({
       message: "Short URL created successfully",
@@ -31,8 +30,6 @@ export const createShortUrl = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 export const redirectFromShortUrl = async (req, res, next) => {
   try {
@@ -55,8 +52,10 @@ export const createCustomUrl = wrapAsync(async (req, res, next) => {
   try {
     const { url, slug, user } = req.body;
 
-    if(!user){
-      const error = new Error("Unauthorized User Not Allowed to create custom URL");
+    if (!user) {
+      const error = new Error(
+        "Unauthorized User Not Allowed to create custom URL",
+      );
       error.status = 401;
       throw error;
     }
@@ -67,8 +66,7 @@ export const createCustomUrl = wrapAsync(async (req, res, next) => {
       throw error;
     }
 
-    
-    const shortURL = await shortUrlServiceWithUser(url, user, slug); 
+    const shortURL = await shortUrlServiceWithUser(url, user, slug);
 
     res.status(201).json({
       message: "Custom Short URL created successfully",
@@ -77,4 +75,30 @@ export const createCustomUrl = wrapAsync(async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}); 
+});
+
+export const listUserUrls = wrapAsync(async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      const error = new Error("Unauthorized");
+      error.status = 401;
+      throw error;
+    }
+
+    const urls = await getUrlsByUser(user._id);
+    const baseUrl = process.env.APP_URL || "http://localhost:3000/";
+
+    const response = urls.map((item) => ({
+      _id: item._id,
+      long_url: item.long_url,
+      short_url: item.short_url,
+      full_short_url: baseUrl + item.short_url,
+      clicks: item.clicks,
+    }));
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+});

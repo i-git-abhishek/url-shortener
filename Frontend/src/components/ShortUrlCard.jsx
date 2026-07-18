@@ -24,7 +24,6 @@ const ShortUrlCard = ({ shortUrl, copied }) => {
           {copied ? "Copied" : "Live"}
         </span>
       </div>
-
       <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-white p-3 sm:flex-row sm:items-center">
         <a
           href={shortUrl}

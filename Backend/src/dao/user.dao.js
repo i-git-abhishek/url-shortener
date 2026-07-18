@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import UrlModel from '../models/shorturl.model.js'
 
 export const findUserByEmail = async (email) => {
     return await User.findOne({email})
@@ -33,4 +34,8 @@ export const deleteUser = async (id) => {
     if(!user)   throw new Error("User not found");
     await user.remove();
     return user;
+}
+
+export const getAllUserUrls = async (id) => {
+    return await UrlModel.find({user: id});
 }

@@ -1,19 +1,16 @@
-import { useState } from "react";
-import LoginForm from "../components/loginForm.jsx";
-import RegisterForm from "../components/registerForm.jsx";
+import React, { useState } from 'react'
+import LoginForm from '../components/loginForm.jsx'
+import RegisterForm from '../components/registerForm.jsx'
 
-function AuthPage() {
-  const [currentAction, setCurrentAction] = useState("login");
+const AuthPage = () => {
 
-  return (
-    <div className="min-h-screen flex justify-center items-center bg-slate-100 px-4">
-      {currentAction === "login" ? (
-        <LoginForm setCurrentAction={setCurrentAction} />
-      ) : (
-        <RegisterForm setCurrentAction={setCurrentAction} />
-      )}
-    </div>
-  );
+    const [login, setLogin] = useState(true)
+
+    return (
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+            {login ? <LoginForm state={setLogin} /> : <RegisterForm state={setLogin} />}
+        </div>
+    )
 }
 
-export default AuthPage;
+export default AuthPage
