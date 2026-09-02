@@ -17,12 +17,14 @@ export const loginUser = async (email, password) => {
   const user = await findUserByEmailandPassword(email);
   if (!user) {
     const error = new Error("Invalid Credentials");
+    error.status = 401;
     throw error;
   }
 
   const isPasswordValid = await user.comparePassword(password);
   if (!isPasswordValid) {
     const error = new Error("Invalid Credentials");
+    error.status = 401;
     throw error;
   }
 
