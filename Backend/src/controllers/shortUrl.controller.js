@@ -50,7 +50,8 @@ export const redirectFromShortUrl = async (req, res, next) => {
 
 export const createCustomUrl = wrapAsync(async (req, res, next) => {
   try {
-    const { url, slug, user } = req.body;
+    const {url, slug} = req.body;
+    const user = req.user;
 
     if (!user) {
       const error = new Error(
@@ -66,7 +67,7 @@ export const createCustomUrl = wrapAsync(async (req, res, next) => {
       throw error;
     }
 
-    const shortURL = await shortUrlServiceWithUser(url, user, slug);
+    const shortURL = await shortUrlServiceWithUser(url, user._id, slug);
 
     res.status(201).json({
       message: "Custom Short URL created successfully",

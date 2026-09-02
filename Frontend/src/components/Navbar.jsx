@@ -33,7 +33,7 @@ const Navbar = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <span className="text-gray-700">
-                  Welcome, {user?.user.name || user?.user.email || 'User'}
+                  Welcome, {user?.name || user?.email || 'User'}
                 </span>
                 <button
                   onClick={handleLogout}
