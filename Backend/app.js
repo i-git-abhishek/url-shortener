@@ -15,7 +15,6 @@ dotenv.config("./.env");
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log(process.env.APP_URL);
 
 app.use(
   cors({
@@ -44,5 +43,4 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
   connectDB();
-  console.log(`App is running on port http://localhost:3000`);
 });
