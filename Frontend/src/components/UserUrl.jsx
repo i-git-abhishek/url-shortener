@@ -2,6 +2,22 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getAllUserUrls } from '../api/user.api'
 
+const calculateTimeLeft = (createdAt) => {
+  if (!createdAt) return "Never"; // Fallback for URLs created before we added the TTL index
+
+  const expiryDate = new Date(createdAt).getTime() + (7 * 24 * 60 * 60 * 1000); // Add 7 days
+  const now = new Date().getTime();
+  const diff = expiryDate - now;
+
+  if (diff <= 0) return "Expired";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  if (days > 0) return `${days}d ${hours}h`;
+  return `${hours}h`;
+};
+
 const UserUrl = () => {
   const { data: urls, isLoading, isError, error } = useQuery({
     queryKey: ['userUrls'],
@@ -66,6 +82,9 @@ const UserUrl = () => {
                 Clicks
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expires In
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -92,8 +111,19 @@ const UserUrl = () => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-gray-900">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    <span className="whitespace-nowrap px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                       {url.clicks} {url.clicks === 1 ? 'click' : 'clicks'}
+                    </span>
+                  </div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="text-sm text-gray-900">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      !url.createdAt ? 'bg-gray-100 text-gray-800' : 
+                      calculateTimeLeft(url.createdAt) === 'Expired' ? 'bg-red-100 text-red-800' : 
+                      'bg-amber-100 text-amber-800'
+                    }`}>
+                      {calculateTimeLeft(url.createdAt)}
                     </span>
                   </div>
                 </td>

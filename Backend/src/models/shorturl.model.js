@@ -19,7 +19,12 @@ const shortUrlSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 604800
+    },
 });
 
 const shortURL = mongoose.model("shortURL", shortUrlSchema);
